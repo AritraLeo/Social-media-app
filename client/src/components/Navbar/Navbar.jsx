@@ -5,6 +5,7 @@ import useStyles from './styles';
 import memories from '../../images/memories.png'
 import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
+import decode from 'jwt-decode';
 
 
 const Navbar = () => {
@@ -23,6 +24,10 @@ const Navbar = () => {
     useEffect(() => {
         const token = user?.token;
         // For JWT check or manual signup - 
+        if (token) {
+            const decodedToken = decode(token);
+            if (decodedToken.exp * 1000 < new Date().getTime()) logout();
+        }
         setUser(JSON.parse(localStorage.getItem('profile')));
     }, [location]);
     
